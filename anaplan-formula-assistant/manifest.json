@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Anaplan Builder Assistant",
-  "version": "1.3",
-  "description": "A builder assistant and formula reference tool for Anaplan model builders, provided by Moody's.",
+  "version": "1.0",
+  "description": "A builder assistant and formula reference tool for Anaplan model builders.",
   "permissions": ["storage", "activeTab", "scripting"],
   "host_permissions": ["https://help.anaplan.com/*", "https://*.anaplan.com/*"],
   "action": {

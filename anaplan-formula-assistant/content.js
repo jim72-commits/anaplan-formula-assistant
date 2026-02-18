@@ -1,5 +1,6 @@
 (function () {
-  var ABA_VERSION = '7.0';
+  var ABA_VERSION = '8.0';
+  var STORAGE_KEY = 'abaPanelState';
   var existingPanel = document.getElementById('aba-floating-panel');
   var existingBtn = document.getElementById('aba-toggle-btn');
   var existingTB = document.getElementById('aba-toolbar-btn');
@@ -50,6 +51,47 @@
   };
 
   var panel, toastEl, isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
+  var saveTimer = null;
+
+  function saveState() {
+    if (!panel) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function() {
+      var rect = panel.getBoundingClientRect();
+      var state = {
+        left: parseInt(panel.style.left) || rect.left,
+        top: parseInt(panel.style.top) || rect.top,
+        width: rect.width,
+        height: rect.height,
+        visible: panel.style.display !== 'none'
+      };
+      chrome.storage.local.set({ [STORAGE_KEY]: state });
+    }, 200);
+  }
+
+  function applyState(state) {
+    if (!state || !panel) return;
+
+    if (typeof state.left === 'number' && typeof state.top === 'number') {
+      var x = Math.max(0, Math.min(window.innerWidth - 50, state.left));
+      var y = Math.max(0, Math.min(window.innerHeight - 30, state.top));
+      panel.style.left = x + 'px';
+      panel.style.top = y + 'px';
+      panel.style.right = 'auto';
+    }
+
+    if (typeof state.width === 'number') {
+      panel.style.width = Math.max(180, Math.min(700, state.width)) + 'px';
+    }
+    if (typeof state.height === 'number') {
+      panel.style.height = state.height + 'px';
+    }
+
+    if (state.visible === false) {
+      panel.style.display = 'none';
+      showToggleBtn();
+    }
+  }
 
   function copyToClipboard(text) {
     var ta = document.createElement('textarea');
@@ -111,12 +153,18 @@
 
     document.getElementById('aba-close-btn').addEventListener('click', function() {
       panel.style.display = 'none';
+      saveState();
       showToggleBtn();
     });
 
     panel.querySelectorAll('.aba-section-label-row').forEach(function(row) {
       row.addEventListener('mousedown', startDrag);
     });
+
+    var resizeObserver = new ResizeObserver(function() {
+      if (!isDragging) saveState();
+    });
+    resizeObserver.observe(panel);
   }
 
   function startDrag(e) {
@@ -143,6 +191,7 @@
     isDragging = false;
     document.removeEventListener('mousemove', onDrag);
     document.removeEventListener('mouseup', stopDrag);
+    saveState();
   }
 
   function showToggleBtn() {
@@ -155,6 +204,7 @@
       btn.addEventListener('click', function() {
         btn.style.display = 'none';
         panel.style.display = 'flex';
+        saveState();
       });
       document.body.appendChild(btn);
     }
@@ -176,6 +226,10 @@
 
   createPanel();
 
+  chrome.storage.local.get([STORAGE_KEY], function(data) {
+    applyState(data[STORAGE_KEY]);
+  });
+
   chrome.runtime.onMessage.addListener(function(msg) {
     if (msg.action === 'togglePanel') {
       if (panel.style.display === 'none') {
@@ -186,6 +240,7 @@
         panel.style.display = 'none';
         showToggleBtn();
       }
+      saveState();
     }
   });
 })();

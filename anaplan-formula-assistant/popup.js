@@ -1,3 +1,9 @@
+self.addEventListener('unhandledrejection', (event) => {
+  if (event.reason?.message?.includes('Receiving end does not exist')) {
+    event.preventDefault();
+  }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // ── DOM refs ──
@@ -123,16 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateStatus.classList.add('hidden');
     updateStatus.className = 'hidden';
 
-    chrome.runtime.sendMessage({ action: 'checkForUpdates' }, (response) => {
-      checkUpdatesBtn.disabled = false;
-      checkUpdatesBtn.classList.remove('checking');
-      checkUpdatesBtn.textContent = 'Check for Updates';
-
-      if (chrome.runtime.lastError) {
-        showUpdateStatus('error', 'Could not connect to the background service. Try reloading the extension.');
-        return;
-      }
-
+    chrome.runtime.sendMessage({ action: 'checkForUpdates' }).then((response) => {
       if (!response) {
         showUpdateStatus('error', 'No response received. Try again.');
         return;
@@ -157,6 +154,12 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         showUpdateStatus('error', response.error);
       }
+    }).catch(() => {
+      showUpdateStatus('error', 'Could not connect to the background service. Try reloading the extension.');
+    }).finally(() => {
+      checkUpdatesBtn.disabled = false;
+      checkUpdatesBtn.classList.remove('checking');
+      checkUpdatesBtn.textContent = 'Check for Updates';
     });
   });
 
@@ -504,29 +507,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // ══════════════════════════════════════════════
   const launchBtn = document.getElementById('launch-quick-paste');
   if (launchBtn) {
-    launchBtn.addEventListener('click', () => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabsList) => {
+    launchBtn.addEventListener('click', async () => {
+      try {
+        const tabsList = await chrome.tabs.query({ active: true, currentWindow: true });
         if (!tabsList || !tabsList[0]) {
           showToast('No active tab found');
           return;
         }
         const tabId = tabsList[0].id;
 
-        chrome.scripting.insertCSS({ target: { tabId }, files: ['content.css'] })
-          .then(() => chrome.scripting.executeScript({ target: { tabId }, files: ['content.js'] }))
-          .then(() => new Promise(resolve => setTimeout(resolve, 150)))
-          .then(() => {
-            return chrome.tabs.sendMessage(tabId, { action: 'togglePanel' }).catch(() => {
-              // Listener not ready yet or script already created the panel — that's ok
-            });
-          })
-          .then(() => {
-            showToast('Quick Paste panel opened');
-          })
-          .catch(() => {
-            showToast('Cannot inject — open an Anaplan page first');
-          });
-      });
+        await chrome.scripting.insertCSS({ target: { tabId }, files: ['content.css'] });
+        await chrome.scripting.executeScript({ target: { tabId }, files: ['content.js'] });
+        await new Promise(resolve => setTimeout(resolve, 150));
+        await chrome.tabs.sendMessage(tabId, { action: 'togglePanel' }).catch(() => {});
+        showToast('Quick Paste panel opened');
+      } catch {
+        showToast('Cannot inject — open an Anaplan page first');
+      }
     });
   }
 
