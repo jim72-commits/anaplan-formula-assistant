@@ -2,8 +2,8 @@
               ANAPLAN BUILDER ASSISTANT - JOB AID
 ================================================================================
 
-Version:      1.3
-Provided by:  Jim @ Moody's
+Version:      1.0
+Provided by:  Jim
 Last Updated: February 2026
 
 ================================================================================
@@ -274,5 +274,5 @@ For questions, issues, or feature requests, contact your Anaplan Center of
 Excellence team.
 
 ================================================================================
-  Anaplan Builder Assistant v1.3 - Built for Anaplan model builders at Moody's
+  Anaplan Builder Assistant v1.0 - Built for Anaplan model builders
 ================================================================================
