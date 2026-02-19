@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Anaplan Builder Assistant</h1>
+      <p class="subtitle">Formulas &middot; Excel &middot; Explain &middot; Settings</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" data-tab="builder">Formulas</button>
+      <button class="tab" data-tab="excel">Excel→Anaplan</button>
+      <button class="tab" data-tab="explainer">Explainer</button>
+      <button class="tab" data-tab="history">History</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </div>
+
+    <!-- Tab: Builder -->
+    <div id="builder" class="tab-content active">
+      <input type="text" id="builder-search" placeholder="Search for a function (e.g. FIND, LOOKUP, IRR)...">
+
+      <label for="category-select">Category</label>
+      <select id="category-select">
+        <option value="">-- Select Category --</option>
+      </select>
+
+      <label for="function-select">Function</label>
+      <select id="function-select" disabled>
+        <option value="">-- Select Function --</option>
+      </select>
+
+      <div id="function-info" class="info-box hidden">
+        <p id="func-description"></p>
+        <code id="func-syntax"></code>
+        <div id="func-example" class="func-example hidden"></div>
+        <div id="func-scenario" class="scenario-box hidden"></div>
+      </div>
+
+      <div id="params-container" class="hidden">
+        <label>Parameters</label>
+        <div id="params-fields"></div>
+      </div>
+
+      <div id="output-section" class="hidden">
+        <label>Generated Formula</label>
+        <div class="output-row">
+          <code id="formula-output"></code>
+          <button id="copy-btn" title="Copy to clipboard">Copy</button>
+        </div>
+        <button id="save-btn" class="secondary-btn">Save to History</button>
+      </div>
+
+    </div>
+
+    <!-- Tab: Excel → Anaplan -->
+    <div id="excel" class="tab-content">
+      <input type="text" id="excel-search" placeholder="Type an Excel function (e.g. VLOOKUP, SUMIF, IF)...">
+      <select id="excel-category-select">
+        <option value="">-- All Categories --</option>
+      </select>
+      <div id="excel-list"></div>
+      <p class="excel-source">Source: <a href="https://help.anaplan.com/excel-comparison-80a1a6ce-5af9-4c7c-8488-a153931106b5" target="_blank">Anaplan Excel Comparison</a></p>
+    </div>
+
+    <!-- Tab: Explainer -->
+    <div id="explainer" class="tab-content">
+      <label for="explain-input">Paste an Anaplan formula</label>
+      <textarea id="explain-input" rows="3" placeholder="e.g. IF Revenue > 0 THEN Revenue / Units ELSE 0"></textarea>
+      <button id="explain-btn" class="primary-btn">Explain Formula</button>
+
+      <div id="explain-result" class="hidden">
+        <label>Breakdown</label>
+        <div id="explain-steps"></div>
+      </div>
+
+      <div id="explain-empty" class="hidden">
+        <p class="empty-msg">Paste a formula above and click "Explain Formula" to see a step-by-step breakdown.</p>
+      </div>
+    </div>
+
+    <!-- Tab: History -->
+    <div id="history" class="tab-content">
+      <div id="history-list"><p class="empty-msg">No saved formulas yet.</p></div>
+      <button id="clear-history-btn" class="danger-btn">Clear History</button>
+    </div>
+
+    <!-- Tab: Settings -->
+    <div id="settings" class="tab-content">
+      <div class="settings-section">
+        <label>Quick Paste Panel</label>
+        <button id="launch-quick-paste" class="quick-paste-btn">
+          <span class="qp-icon">fx</span>
+          <span class="qp-text">Open Quick Paste on this page</span>
+        </button>
+        <p class="qp-hint">Floating panel for pasting Format &amp; Summary into Anaplan blueprint. Auto-launches on anaplan.com.</p>
+      </div>
+
+      <div class="update-section">
+        <div class="update-header">
+          <span class="update-title">Formula Database</span>
+          <span id="func-count" class="update-count"></span>
+        </div>
+        <p id="last-check" class="update-meta">Never checked for updates.</p>
+        <button id="check-updates-btn" class="secondary-btn update-btn">Check for Updates</button>
+        <div id="update-status" class="hidden"></div>
+      </div>
+
+      <div class="settings-section feedback-section">
+        <label>Report a Bug</label>
+        <p class="qp-hint">Found an issue or have a suggestion? Send an email to <a href="mailto:jim.feng.job@gmail.com?subject=Anaplan Builder Assistant - Bug Report">jim.feng.job@gmail.com</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="formulas.js"></script>
+  <script src="excel-mapping.js"></script>
+  <script src="explainer.js"></script>
+  <script src="popup.js"></script>
+
+</body>
+</html>
