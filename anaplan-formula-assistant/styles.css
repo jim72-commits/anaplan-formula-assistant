@@ -743,3 +743,14 @@ textarea:focus {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+.feedback-section a {
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.feedback-section a:hover {
+  text-decoration: underline;
+}
+
