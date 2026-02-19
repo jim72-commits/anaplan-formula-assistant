@@ -1,0 +1,23 @@
+Anaplan Builder Assistant - Privacy Policy
+
+Last Updated: February 2026
+
+Anaplan Builder Assistant is a Chrome extension that assists Anaplan model builders with formula building, Excel-to-Anaplan function mapping, and blueprint property management.
+
+Data Collection
+This extension does NOT collect, transmit, or share any personal data or user information.
+
+Data Storage
+All data (formula history, user preferences, and panel settings) is stored locally on your device using Chrome's built-in storage API (chrome.storage.local). No data is sent to any external server.
+
+Network Requests
+The only network request the extension makes is to help.anaplan.com to check for updates to the Anaplan function reference. No user data is included in this request.
+
+Third-Party Services
+This extension does not use any third-party analytics, tracking, or advertising services.
+
+Changes to This Policy
+Any updates to this privacy policy will be reflected here with a revised date.
+
+Contact
+For questions about this privacy policy, contact: jim.feng.job@gmail.com
