@@ -1,6 +1,7 @@
 (function () {
-  var ABA_VERSION = '8.0';
+  var ABA_VERSION = '10.0';
   var STORAGE_KEY = 'abaPanelState';
+
   var existingPanel = document.getElementById('aba-floating-panel');
   var existingBtn = document.getElementById('aba-toggle-btn');
   var existingTB = document.getElementById('aba-toolbar-btn');
@@ -243,4 +244,5 @@
       saveState();
     }
   });
+
 })();
